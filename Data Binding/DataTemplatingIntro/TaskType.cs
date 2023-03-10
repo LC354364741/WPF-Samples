@@ -5,7 +5,7 @@ namespace DataTemplatingIntro
 {
     public enum TaskType
     {
-        Home,
-        Work
+        Node,
+        Line
     }
 }

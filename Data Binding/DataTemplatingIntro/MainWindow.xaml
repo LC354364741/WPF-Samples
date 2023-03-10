@@ -5,71 +5,101 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DataTemplatingIntro"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" SizeToContent="WidthAndHeight">
+        Title="MainWindow" Height="750" Width="1125" >
     <Window.Resources>
         <local:Tasks x:Key="MyTodoList"/>
-
-        <local:TaskListDataTemplateSelector x:Key="MyDataTemplateSelector"/>
-
-        <DataTemplate x:Key="ImportantTaskTemplate">
-            <DataTemplate.Resources>
-                <Style TargetType="TextBlock">
-                    <Setter Property="FontSize" Value="20"/>
-                </Style>
-            </DataTemplate.Resources>
-            <Border Name="border" BorderBrush="Red" BorderThickness="1"
-              Padding="5" Margin="5">
-                <DockPanel HorizontalAlignment="Center">
-                    <TextBlock Text="{Binding Path=Description}" />
-                    <TextBlock>!</TextBlock>
-                </DockPanel>
-            </Border>
+        <local:DragItemConvert x:Key="DConvert"/>
+        <local:TaskListDataTemplateSelector x:Key="Selector"/>
+        <DataTemplate x:Key="LineStyle">
+            <Polyline Stroke="red" Points="12,12,40,12,90,12,250,200,278,200"/>
         </DataTemplate>
-
-
-        <DataTemplate x:Key="MyTaskTemplate">
-            <Border Name="border" BorderBrush="Aqua" BorderThickness="1"
-              Padding="5" Margin="5">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Task Name:"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=TaskName}" />
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Description:"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Path=Description}"/>
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Priority:"/>
-                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Path=Priority}"/>
-                </Grid>
-            </Border>
-
-            <DataTemplate.Triggers>
-                <DataTrigger Binding="{Binding Path=TaskType}">
-                    <DataTrigger.Value>
-                        <local:TaskType>Home</local:TaskType>
-                    </DataTrigger.Value>
-                    <Setter TargetName="border" Property="BorderBrush" Value="Yellow"/>
-                </DataTrigger>
-            </DataTemplate.Triggers>
-
+        <DataTemplate x:Key="NodeStyle">
+            <TreeView>
+                <TreeViewItem>weeww</TreeViewItem>
+                <TreeViewItem>weeww</TreeViewItem>
+                <TreeViewItem>weeww</TreeViewItem>
+                <TreeViewItem>weeww</TreeViewItem>
+            </TreeView>
         </DataTemplate>
+        
+        <Style TargetType="TreeView" x:Key="DesignNode">
+            <Setter Property="ItemsSource" Value="{Binding Items}"/>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style>
+                        <Setter Property="Canvas.Top" Value="{Binding Y}"/>
+                        <Setter Property="Canvas.Left" Value="{Binding X}"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <Canvas/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <!--<Setter Property="ItemTemplateSelector">
+                <Setter.Value>
+                    <local:TaskListDataTemplateSelector NodeTemplate="{StaticResource NodeStyle}" 
+                                                    ConnectorTemplate="{StaticResource LineStyle}"/>
+                </Setter.Value>
+            </Setter>-->
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <ContentControl Content="{Binding Path=.,Converter={StaticResource DConvert}}" Height="300" Width="400">
+                            <ContentControl.ContentTemplateSelector>
+                                <local:TaskListDataTemplateSelector ConnectorTemplate="{StaticResource LineStyle}" NodeTemplate="{StaticResource NodeStyle}"/>
+                            </ContentControl.ContentTemplateSelector>
+                        </ContentControl>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ListBox" x:Key="DesignMain">
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style>
+                        <Setter Property="Canvas.Top" Value="{Binding Y}"/>
+                        <Setter Property="Canvas.Left" Value="{Binding X}"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <!--<Setter Property="ItemTemplateSelector">
+                <Setter.Value>
+                    <local:TaskListDataTemplateSelector NodeTemplate="{StaticResource NodeStyle}" 
+                                                    ConnectorTemplate="{StaticResource LineStyle}"/>
+                </Setter.Value>
+            </Setter>-->
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <Canvas/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <ContentControl Content="{Binding Path=.,Converter={StaticResource DConvert}}" Height="300" Width="400">
+                            <ContentControl.ContentTemplateSelector>
+                                <local:TaskListDataTemplateSelector ConnectorTemplate="{StaticResource LineStyle}" NodeTemplate="{StaticResource NodeStyle}"/>
+                            </ContentControl.ContentTemplateSelector>
+                        </ContentControl>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+     
     </Window.Resources>
-
-    <StackPanel>
-        <TextBlock FontSize="20" Text="My Task List:"/>
-        <ListBox Width="400" Margin="10"
+    <Grid>
+        <ListBox Margin="10" Style="{StaticResource DesignMain}" FocusVisualStyle="{x:Null}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
              ItemsSource="{Binding Source={StaticResource MyTodoList}}"
-             ItemTemplateSelector="{StaticResource MyDataTemplateSelector}"
              HorizontalContentAlignment="Stretch" 
              IsSynchronizedWithCurrentItem="True"/>
-        <TextBlock FontSize="20" Text="Information:"/>
-        <ContentControl Content="{Binding Source={StaticResource MyTodoList}}"
-                    ContentTemplate="{StaticResource MyTaskTemplate}"/>
-    </StackPanel>
+
+    </Grid>
+
 </Window>
