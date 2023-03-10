@@ -37,7 +37,10 @@ namespace DataTemplatingIntro
 
         public ObservableCollection<TaskBase> Items
         {
-            get { return items; }
+            get {
+                if(items==null)
+                    items = new ObservableCollection<TaskBase>();   
+                return items; }
             set
             {
                 items = value;

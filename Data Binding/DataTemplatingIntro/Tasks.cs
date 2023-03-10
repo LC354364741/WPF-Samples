@@ -9,8 +9,11 @@ namespace DataTemplatingIntro
     {
         public Tasks()
         {
-            Add(new Task("Node", "Node", 2, TaskType.Node) { X = 200, Y = 300 });
-            Add(new TaskLine("Line", "Line", 2, TaskType.Line) { X =100,Y=200});
+            Task ss = new Task("Node1", "Node1", 2, TaskType.Node) { X = 5,Y = 300 };
+            ss.Items.Add(new Task("Node34", "Node34", 2, TaskType.Node) { X = 20, Y = 300 });
+            ss.Items.Add(new TaskLine("Line", "Line", 2, TaskType.Line) { X = 10, Y = 200 });
+            Add(ss);
+            //Add(new TaskLine("Line", "Line", 2, TaskType.Line) { X =100,Y=200});
             //Add(new TaskLine("Line", "Line", 2, TaskType.Line));
             //Add(new Task("Laundry", "Do my Laundry", 2, TaskType.Home));
             //Add(new Task("Email", "Email clients", 1, TaskType.Work));

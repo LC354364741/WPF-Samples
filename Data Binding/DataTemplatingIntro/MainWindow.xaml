@@ -13,17 +13,58 @@
         <DataTemplate x:Key="LineStyle">
             <Polyline Stroke="red" Points="12,12,40,12,90,12,250,200,278,200"/>
         </DataTemplate>
-        <DataTemplate x:Key="NodeStyle">
-            <TreeView>
-                <TreeViewItem>weeww</TreeViewItem>
-                <TreeViewItem>weeww</TreeViewItem>
-                <TreeViewItem>weeww</TreeViewItem>
-                <TreeViewItem>weeww</TreeViewItem>
-            </TreeView>
+        <DataTemplate x:Key="NodeStyle" DataType="{x:Type local:TaskBase}">
+            <ItemsControl ItemsSource="{StaticResource MyTodoList}" FocusVisualStyle="{x:Null}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas Background="Gray"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemContainerStyle>
+                    <Style>
+                        <Setter Property="Canvas.Top" Value="{Binding Y}"/>
+                        <Setter Property="Canvas.Left" Value="{Binding X}"/>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <!--<ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ContentControl Content="{Binding Path=.,Converter={StaticResource DConvert}}" Height="300" Width="400"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>-->
+                <ItemsControl.Template>
+                    <ControlTemplate TargetType="ItemsControl">
+                        <Border CornerRadius="8" BorderThickness="3" BorderBrush="Gray">
+                            <Grid Margin="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition />
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <ListBox ItemsSource="{Binding}" Grid.Row="0" >
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" Height="20"/>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                </ListBox>
+                                <ItemsPresenter Grid.Row="1"/>
+                                <ListBox ItemsSource="{Binding}" Grid.Row="2">
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" Height="20"/>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                </ListBox>
+                            </Grid>
+
+                        </Border>
+                    </ControlTemplate>
+                </ItemsControl.Template>
+            </ItemsControl>
         </DataTemplate>
-        
-        <Style TargetType="TreeView" x:Key="DesignNode">
-            <Setter Property="ItemsSource" Value="{Binding Items}"/>
+
+        <Style TargetType="ItemsControl" x:Key="DesignNode">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="ItemContainerStyle">
                 <Setter.Value>
                     <Style>
@@ -35,16 +76,10 @@
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
-                        <Canvas/>
+                        <Canvas Background="Blue"/>
                     </ItemsPanelTemplate>
                 </Setter.Value>
             </Setter>
-            <!--<Setter Property="ItemTemplateSelector">
-                <Setter.Value>
-                    <local:TaskListDataTemplateSelector NodeTemplate="{StaticResource NodeStyle}" 
-                                                    ConnectorTemplate="{StaticResource LineStyle}"/>
-                </Setter.Value>
-            </Setter>-->
             <Setter Property="ItemTemplate">
                 <Setter.Value>
                     <DataTemplate>
@@ -54,11 +89,21 @@
                             </ContentControl.ContentTemplateSelector>
                         </ContentControl>
                     </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ItemsControl">
+                        <Border Background="Transparent">
+                            <ItemsPresenter/>
+                        </Border>
+                    </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
 
-        <Style TargetType="ListBox" x:Key="DesignMain">
+        <Style TargetType="ItemsControl" x:Key="DesignMain">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Setter Property="ItemContainerStyle">
                 <Setter.Value>
                     <Style>
@@ -67,12 +112,6 @@
                     </Style>
                 </Setter.Value>
             </Setter>
-            <!--<Setter Property="ItemTemplateSelector">
-                <Setter.Value>
-                    <local:TaskListDataTemplateSelector NodeTemplate="{StaticResource NodeStyle}" 
-                                                    ConnectorTemplate="{StaticResource LineStyle}"/>
-                </Setter.Value>
-            </Setter>-->
             <Setter Property="ItemsPanel">
                 <Setter.Value>
                     <ItemsPanelTemplate>
@@ -89,16 +128,24 @@
                             </ContentControl.ContentTemplateSelector>
                         </ContentControl>
                     </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ItemsControl">
+                        <Border>
+                            <ItemsPresenter/>
+                        </Border>
+                    </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
      
     </Window.Resources>
     <Grid>
-        <ListBox Margin="10" Style="{StaticResource DesignMain}" FocusVisualStyle="{x:Null}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+        <ItemsControl Margin="10" Style="{StaticResource DesignMain}" FocusVisualStyle="{x:Null}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
              ItemsSource="{Binding Source={StaticResource MyTodoList}}"
-             HorizontalContentAlignment="Stretch" 
-             IsSynchronizedWithCurrentItem="True"/>
+             HorizontalContentAlignment="Stretch" />
 
     </Grid>
 
